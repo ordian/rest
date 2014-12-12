@@ -17,7 +17,7 @@ require 'data_mapper'           # ORM
 #####################################################################
 
 DataMapper::Logger.new($stderr, :debug)
-DataMapper::setup(:default, "sqlite::memory:")
+DataMapper::setup(:default, "sqlite://#{Dir.pwd}/exchange.db")
 
 class Task
   include DataMapper::Resource
