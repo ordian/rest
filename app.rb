@@ -52,7 +52,7 @@ COMMANDS   = {
   :options => '/'
 }
 
-def find_task(id)
+def find_task()
   task = Task.get(params[:id])
   unless task
     halt 418
@@ -60,7 +60,8 @@ def find_task(id)
   task
 end
 
-def parse_date(s)
+def parse_date()
+  s = "#{params[:year]} #{params[:month]} #{params[:day]}"
   begin
     date = Date.strptime(s, '%Y %m %d')
   rescue
@@ -112,7 +113,7 @@ options '/' do
 end
 
 get '/:id', :provides => [:html, :json, :text, :xml] do
-  task = find_task(params[:id])
+  task = find_task()
 
   @date  = task.date
   @items = task.rates
@@ -124,19 +125,19 @@ get '/:id', :provides => [:html, :json, :text, :xml] do
 end
 
 put '/:year/:month/:day' do
-  date = parse_date("#{params[:year]} #{params[:month]} #{params[:day]}")
+  date = parse_date()
   create_task(date).id.to_s
 end
 
 post '/:id/:year/:month/:day' do
-  task = find_task(params[:id])
-  date = parse_date("#{params[:year]} #{params[:month]} #{params[:day]}")
+  task = find_task()
+  date = parse_date()
   updated = Task.first({ :date => date })
 
   unless updated
     rates = create_new_rates(date)
-    time = Time.now
     task.rates.destroy
+    time = Time.now
     task.update(:date => date, :rates => rates, :updated_at => time)
   else
     updated.id.to_s
@@ -144,6 +145,6 @@ post '/:id/:year/:month/:day' do
 end
 
 delete '/:id' do
-  task = find_task(params[:id])
+  task = find_task()
   task.destroy.to_s
 end
