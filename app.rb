@@ -47,6 +47,7 @@ register Sinatra::Contrib
 SITE_TITLE = "Exchange rates"
 COMMANDS   = {
   :get     => '/ or /id',
+  :delete  => '/id',
   :put     => '/year/month/day',
   :post    => '/id/year/month/day',
   :options => '/'
@@ -103,7 +104,7 @@ end
 ################################ API ################################
 #####################################################################
 
-get '/', :provides => [:html] do
+get '/' do
   @commands = COMMANDS.to_a
   slim(:usage, :commands => @commands)
 end
@@ -112,7 +113,7 @@ options '/' do
   "Available commands:\n" + COMMANDS.map { |k, v| "#{k} #{v}" }.join("\n")
 end
 
-get '/:id', :provides => [:html, :json, :text, :xml] do
+get '/:id' do
   task = find_task()
 
   @date  = task.date
@@ -147,4 +148,16 @@ end
 delete '/:id' do
   task = find_task()
   task.destroy.to_s
+end
+
+patch '/' do
+  halt 405
+end
+
+link '/' do
+  halt 405
+end
+
+unlink '/' do
+  halt 405
 end
