@@ -1,0 +1,7 @@
+h1 Exchange rate on #{date.strftime('%b %d, %Y')}.
+
+table#items
+  - for item in items
+    tr
+      td.code = item.code
+      td.rate = item.rate
